@@ -3,35 +3,29 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include "customer.h"
+struct Customer{
+    int customer_id;
+    char customer_name[255];
+    int customer_age;
+    char customer_cause_of_death[255];
+    char customer_resting_place[255];
+    int customer_died_year;
+    int room_type_id;
+}list[255];
+struct RoomType{
+    int room_type_id;
+    char room_type_name[255];
+    long unsigned int room_type_price;
+}type[10];
 
-void menu();
-int getInt();
-void printExitMessage();
-
-// struct Customer{
-//     int customer_id;
-//     char customer_name[255];
-//     int customer_age;
-//     char customer_cause_of_death[255];
-//     char customer_resting_place[255];
-//     int customer_died_year;
-//     int room_type_id;
-// };
-
-// struct RoomType{
-//     int room_type_id;
-//     char room_type_name[255];
-//     unsigned int room_type_price;
-// };
-
-Customer list[255];
-RoomType type[10];
 int guests;
 int cid;
 int types;
+#include "customer.h"
+//import customer.h dilakukan setelah deklarasi variable global dan struct
+// agar customer.h bisa mengakses variable global dan struct
 
-void import_data_from_file(){
+void import_data_from_file(){ // input data ke dalam array Customer dan array Type
     FILE* fp = fopen("../customer/customer_data.txt", "r");
     FILE* fpp = fopen("../room/room.txt", "r");
     while(!feof(fp)){
@@ -51,8 +45,7 @@ void import_data_from_file(){
     fclose(fpp);
 }
 
-
-
+// main function
 int main(){
     import_data_from_file();
     int choose;
@@ -65,17 +58,17 @@ int main(){
         switch (choose)
         {
         case 1:
-            create(&guests, &types, type, list, &cid);
+            create(&(list[guests]));
             break;
         case 2:
-            read(guests, list, type);
+            read();
             printf("Press enter to continue");getchar();
             break;
         case 3:
-            update(guests, types, list, type);
+            update();
             break;
         case 4:
-            deldata(guests, list, type);
+            remove();
             break;
         case 5:
             printExitMessage();
@@ -88,6 +81,7 @@ int main(){
     return 0;
 }
 
+// Exit Message
 void printExitMessage(){
     FILE* fp = fopen("asciiart.txt", "r");
     char c = fgetc(fp);
@@ -101,12 +95,7 @@ void printExitMessage(){
     printf("Goodbye!");getchar();
 }
 
-int getInt(){
-    int a;
-    scanf("%d", &a);getchar();
-    return a;
-}
-
+// print menu
 void menu(){
     puts("Hotel del Jojo");
     puts("1. Add new customer");

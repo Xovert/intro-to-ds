@@ -1,25 +1,14 @@
-#include<ctype.h>
-struct Customer{
-    int customer_id;
-    char customer_name[255];
-    int customer_age;
-    char customer_cause_of_death[255];
-    char customer_resting_place[255];
-    int customer_died_year;
-    int room_type_id;
-};
-
-struct RoomType{
-    int room_type_id;
-    char room_type_name[255];
-    long unsigned int room_type_price;
-};
-void create(int *guests, int *types, RoomType type[], Customer list[], int *cid);
-void read(int guests, Customer list[], RoomType type[]);
+void menu();
+int getInt();
+void printExitMessage();
+void create(Customer* list);
+void read();
 void update();
-void deldata();
+void remove();
+// prototype functions
 
-void create(int *guests, int *types, RoomType type[], Customer list[], int *cid){
+// input new customer
+void create(Customer* list){
     char input[255] = {};
     bool islower = true;
     do{
@@ -66,29 +55,30 @@ void create(int *guests, int *types, RoomType type[], Customer list[], int *cid)
         }
     } while (!exist);
     char rno[25] = {};
-    for(int i = 0; i<(*types); i++){
+    for(int i = 0; i<(types); i++){
         if(strcmp(roomtype, type[i].room_type_name)==0){
             sprintf(rno,"R%.3d",type[i].room_type_id);
-            list[*guests].room_type_id = type[i].room_type_id;
+            list->room_type_id = type[i].room_type_id;
             break;
         }
     }
-    strcpy(list[*guests].customer_name, input);
-    list[*guests].customer_age = age;
-    strcpy(list[*guests].customer_cause_of_death, death);
-    strcpy(list[*guests].customer_resting_place, rest);
-    list[*guests].customer_died_year = year;
-    (*cid)++;
-    list[*guests].customer_id = (*cid);
-    (*guests)++;
+    strcpy(list->customer_name, input);
+    list->customer_age = age;
+    strcpy(list->customer_cause_of_death, death);
+    strcpy(list->customer_resting_place, rest);
+    list->customer_died_year = year;
+    (cid)++;
+    list->customer_id = (cid);
+    (guests)++;
     FILE* fp = fopen("../customer/customer_data.txt", "a");
-    fprintf(fp, "C%.3d,%s,%d,%s,%s,%d,%s\n", *cid, input, age, death, rest, year, rno);
+    fprintf(fp, "C%.3d,%s,%d,%s,%s,%d,%s\n", cid, input, age, death, rest, year, rno);
     fclose(fp);
     puts("");
     puts("Welcome to Hotel del Jojo!");getchar();
 }
 
-void read(int guests, Customer list[], RoomType type[]){
+// display data
+void read(){
     puts("|   | ID   | Name       | Age | Room     |");
     puts("|---|------|------------|-----|----------|");
     int no = 0;
@@ -102,8 +92,9 @@ void read(int guests, Customer list[], RoomType type[]){
     puts("");
 }
 
-void update(int guests, int types, Customer list[], RoomType type[]){
-    read(guests, list, type);
+// update data
+void update(){
+    read();
     int id;
     int exist = 0;
     int idx = 0;
@@ -158,7 +149,7 @@ void update(int guests, int types, Customer list[], RoomType type[]){
     switch (x){
     case 'Y':
         system("clear");
-        read(guests, list, type);
+        read();
         printf("Press Enter to Continue...");getchar();
         break;
     case 'N':
@@ -166,8 +157,9 @@ void update(int guests, int types, Customer list[], RoomType type[]){
     }
 }
 
-void deldata(int guests, Customer list[], RoomType type[]){
-    read(guests, list, type);
+// remove data
+void remove(){
+    read();
     int id;
     int exist = 0;
     int idx = 0;
@@ -205,10 +197,17 @@ void deldata(int guests, Customer list[], RoomType type[]){
     switch (x){
     case 'Y':
         system("clear");
-        read(guests, list, type);
+        read();
         printf("Press Enter to Continue...");getchar();
         break;
     case 'N':
         return;
     }
+}
+
+// getter Integer
+int getInt(){
+    int a;
+    scanf("%d", &a);getchar();
+    return a;
 }
